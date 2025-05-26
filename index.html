@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gestores Kids - Quiz Hidráulica e Sustentabilidade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@1600;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0a3d62; /* Azul escuro */
+            --secondary-color: #2e86de; /* Azul médio */
+            --accent-color: #5dcbff; /* Azul claro/água */
+            --background-light: #e6f2ff; /* Azul muito claro */
+            --background-dark: #cce0ff; /* Azul claro */
+            --text-color: #333;
+            --border-radius: 12px;
+            --box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            --correct-color: #28a745; /* Verde */
+            --incorrect-color: #dc3545; /* Vermelho */
+        }
+
+        body {
+            background: var(--background-light);
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.6;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5em;
+            text-align: center;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .logo-gifs-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 15px auto 30px;
+            flex-wrap: wrap;
+        }
+        
+        .logo-gifs-container img {
+            max-height: 250px;
+            width: auto;
+            margin: 0;
+       }
+
+        .ods-container {
+           display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+           .ods-container img {
+            max-height: 150px;
+	    width: auto;
+            margin-bottom: 10px;        
+        }
+        .content-container {
+            background: linear-gradient(145deg, white, var(--background-dark));
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 400px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 30px;
+        }
+
+        .start-button:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        #quiz-container {
+            margin-top: 20px;
+        }
+
+        .question-text {
+            font-size: 1.0em;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            font-weight: 100;
+        }
+
+        .quiz-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        @media (width: 600px) {
+            .quiz-buttons {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .button {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            border: 2px solid var(--secondary-color);
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            text-align: left;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .button:hover:not(:disabled) {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background-color: var(--background-dark);
+            color: var(--primary-color);
+        }
+
+        .button:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.0em;
+            font-weight: 100;
+            text-align: left;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .feedback.correct {
+            background-color: #e6ffe6;
+            color: var(--correct-color);
+            border: 1px solid var(--correct-color);
+        }
+
+        .feedback.incorrect {
+            background-color: #ffe6e6;
+            color: var(--incorrect-color);
+            border: 1px solid var(--incorrect-color);
+        }
+
+        .next-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 25px;
+            width: auto;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .next-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .next-btn:active {
+            transform: translateY(0);
+        }
+
+        #results-container {
+            margin-top: 30px;
+            font-size: 1.3em;
+            color: var(--primary-color);
+        }
+
+        #results-container p {
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .restart-button {
+            background-color: var(--correct-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 30px;
+        }
+
+        .restart-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .restart-button:active {
+            transform: translateY(0);
+        }
+
+        .content-container::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: radial-gradient(circle at top left, var(--accent-color) 0%, transparent 40%),
+                        radial-gradient(circle at bottom right, var(--secondary-color) 0%, transparent 40%);
+            opacity: 0.1;
+            z-index: -1;
+            border-radius: var(--border-radius);
+        }
+
+        .score-display {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .welcome-text {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            color: var(--primary-color);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-container">
+        <h1>Gestores Kids</h1>
+        <h2>Quiz: Hidráulica e Sustentabilidade</h2>
+        
+        <div id="start-screen">
+            <div class="logo-gifs-container">
+                <img alt="Logo UVA" src="https://media0.giphy.com/media/pzHoviLTlDCuAy9lkx/giphy.webp"/>
+                <img alt="Logo ANAGEA" src="https://www.anagea.org.br/gallery_gen/b89c8b9934fe2282bfbd5d1b3d5ee755_anim.gif?ts=1747787161"/>
+                <img alt="Logo UniJorge" src="data:image/png;base64,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"/> </div>
+            <p class="welcome-text">Seja bem-vindo(a) gestor(a) ambiental do futuro!</p>
+
+<div class="ods-container">
+                    <img src="data:image/png;base64,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" alt="ODS 4"/>                            
+                    <img src="data:image/jpeg;base64,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" alt="ODS 5"/>                                     <img src="data:image/jpeg;base64,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" alt="ODS 6"/>
+                </div>
+            </div>
+
+            <p>Teste seus conhecimentos sobre como a água funciona e como podemos protegê-la!</p>
+
+            <button class="start-button" onclick="startQuiz()">Começar Quiz</button>
+        </div>
+
+        <div id="quiz-container" class="hidden"></div>
+
+        <div id="results-container" class="hidden"></div>
+    </div>
+
+ <script>
+        // Carrega todas as questões do JSON
+        const allQuizQuestions = [
+            {
+                "pergunta": "Qual cientista antigo enunciou princípios da hidrostática no seu 'Tratado sobre corpos flutuantes' por volta de 250 a.C.?",
+                "alternativas": [
+                    "A) Isaac Newton",
+                    "B) Galileu Galilei",
+                    "C) Arquimedes",
+                    "D) Blaise Pascal"
+                ],
+                "resposta_correta": "C",
+                "feedback": "Muito bem! Arquimedes foi um gênio da antiguidade. Até hoje usamos o seu famoso princípio para entender por que os corpos flutuam!"
+            },
+            {
+                "pergunta": "O que são corpos flutuantes?",
+                "alternativas": [
+                    "A) Corpos em movimento na água",
+                    "B) Corpos em repouso na superfície de um fluido",
+                    "C) Corpos totalmente submersos",
+                    "D) Corpos com densidade maior que a da água"
+                ],
+                "resposta_correta": "B",
+                "feedback": "Boa! Corpos flutuantes são aqueles que descansam tranquilos na superfície dos líquidos, como um barquinho no rio."
+            },
+            {
+                "pergunta": "Quais estudiosos antigos contribuíram para a hidráulica após observações cotidianas?",
+                "alternativas": [
+                    "A) Arquimedes e Newton",
+                    "B) Leonardo da Vinci e Pascal",
+                    "C) Galileu Galilei e Bernoulli",
+                    "D) Arquimedes, Leonardo da Vinci, Simon Stevin, Blaise Pascal, Galileu Galilei, Torricelli e Daniel Bernoulli"
+                ],
+                "resposta_correta": "D",
+                "feedback": "Excelente! Grandes mentes ajudaram a gente a entender como a água se move, se espalha e empurra!"
+            },
+            {
+                "pergunta": "Qual cientista desenvolveu as primeiras equações gerais para o movimento dos fluidos?",
+                "alternativas": [
+                    "A) Newton",
+                    "B) Bernoulli",
+                    "C) Euler",
+                    "D) Pascal"
+                ],
+                "resposta_correta": "C",
+                "feedback": "Mandou bem! Euler foi fundamental para o estudo dos fluidos em movimento. Matemática pura!"
+            },
+            {
+                "pergunta": "O que são fluidos?",
+                "alternativas": [
+                    "A) Substâncias sólidas",
+                    "B) Substâncias líquidas ou gasosas que se deformam facilmente",
+                    "C) Substâncias que mantêm a forma constante",
+                    "D) Substâncias com alta viscosidade"
+                ],
+                "resposta_correta": "B",
+                "feedback": "Show! Fluidos são aquelas substâncias que escorrem, escorregam, deslizam... como água e ar!"
+            },
+            {
+                "pergunta": "O que é tensão superficial?",
+                "alternativas": [
+                    "A) Tensão em fluidos em repouso",
+                    "B) Tensão gerada por forças opostas",
+                    "C) Tensão gerada por forças aplicadas em sentidos iguais ou opostos, em direções semelhantes",
+                    "D) Tensão em fluidos turbulentos"
+                ],
+                "resposta_correta": "C",
+                "feedback": "Parabéns! A tensão superficial explica por que alguns insetos conseguem caminhar sobre a água."
+            },
+            {
+                "pergunta": "Como os fluidos podem ser classificados?",
+                "alternativas": [
+                    "A) Líquidos e gases",
+                    "B) Compressíveis e incompressíveis",
+                    "C) Newtonianos e não-newtonianos",
+                    "D) Ideais e reais"
+                ],
+                "resposta_correta": "A",
+                "feedback": "Certíssimo! A principal divisão é entre líquidos e gases, os dois tipos mais comuns de fluido!"
+            },
+            {
+                "pergunta": "Um sistema de tratamento de esgoto primário remove principalmente qual tipo de poluente, crucial para proteger a saúde pública e ecossistemas aquáticos (ODS 6)?",
+                "alternativas": [
+                    "A) Microrganismos patogênicos",
+                    "B) Sólidos sedimentáveis",
+                    "C) Produtos químicos dissolvidos",
+                    "D) Nutrientes como nitrogênio e fósforo"
+                ],
+                "resposta_correta": "B",
+                "feedback": "Correto! A remoção de sólidos sedimentáveis é um passo fundamental para evitar a contaminação de corpos d'água e proteger a saúde das comunidades, contribuindo diretamente para o ODS 6, que busca garantir água limpa e saneamento para todos."
+            },
+            {
+                "pergunta": "Qual o conceito de 'gestão integrada de recursos hídricos' (GIRH) é mais alinhado com o objetivo do ODS 6 de garantir a sustentabilidade dos recursos hídricos?",
+                "alternativas": [
+                    "A) Focar no aumento da oferta de água através de grandes obras",
+                    "B) Considerar as necessidades de todos os usuários da água e os aspectos ambientais",
+                    "C) Priorizar o uso da água para o desenvolvimento econômico imediato",
+                    "D) Deixar a gestão da água a cargo de um único setor governamental"
+                ],
+                "resposta_correta": "B",
+                "feedback": "Exatamente! A GIRH, que considera as diversas demandas e a saúde dos ecossistemas, é fundamental para a sustentabilidade da água e está diretamente ligada ao ODS 6."
+            },
+            {
+                "pergunta": "Em projetos de engenharia hidráulica para comunidades rurais, qual prática pode contribuir para o empoderamento de mulheres (ODS 5) e garantir a sustentabilidade a longo prazo?",
+                "alternativas": [
+                    "A) Contratar apenas engenheiros homens para liderar a construção",
+                    "B) Consultar apenas os líderes masculinos da comunidade sobre as necessidades",
+                    "C) Envolver ativamente as mulheres na fase de planejamento, implementação e manutenção do projeto",
+                    "D) Assumir que as necessidades de água e saneamento são as mesmas para homens e mulheres"
+                ],
+                "resposta_correta": "C",
+                "feedback": "Correto! A participação ativa das mulheres garante que suas necessidades e perspectivas sejam consideradas, levando a projetos mais eficazes e sustentáveis, além de promover o empoderamento feminino (ODS 5)."
+            },
+            {
+                "pergunta": "Qual a importância de promover a participação de mulheres em cargos de liderança na gestão de recursos hídricos (ODS 5)?",
+                "alternativas": [
+                    "A) Mulheres não têm interesse em questões técnicas",
+                    "B) A liderança feminina pode trazer diferentes perspectivas e soluções inovadoras",
+                    "C) É importante apenas ter representatividade masculina em cargos técnicos",
+                    "D) A participação feminina é irrelevante para a eficiência da gestão"
+                ],
+                "resposta_correta": "B",
+                "feedback": "Exatamente! A liderança feminina traz diversidade de pensamento e pode levar a soluções mais inclusivas e eficazes na gestão da água, contribuindo para o ODS 5."
+            },
+            {
+                "pergunta": "Qual a importância da disseminação de conhecimento sobre hidráulica e gestão de recursos hídricos para a população em geral (ODS 4)?",
+                "alternativas": [
+                    "A) Apenas os engenheiros precisam entender de hidráulica",
+                    "B) A conscientização pública pode levar a um uso mais responsável da água e ao apoio a políticas sustentáveis",
+                    "C) O conhecimento técnico deve ser restrito aos profissionais da área",
+                    "D) A educação ambiental não se relaciona com a hidráulica"
+                ],
+                "resposta_correta": "B",
+                "feedback": "Correto! A educação e a conscientização são cruciais para promover um uso responsável da água e o apoio a políticas que garantam o acesso e a sustentabilidade (ODS 4 e 6)."
+            },
+            {
+                "pergunta": "Qual o papel das universidades e instituições de pesquisa no avanço do conhecimento em hidráulica e na formação de profissionais qualificados (ODS 4)?",
+                "alternativas": [
+                    "A) Apenas formar engenheiros para o mercado de trabalho",
+                    "B) Desenvolver novas tecnologias e metodologias para a gestão sustentável da água",
+                    "C) Manter o conhecimento técnico restrito ao ambiente acadêmico",
+                    "D) Não têm um papel direto na solução dos desafios hídricos"
+                ],
+                "resposta_correta": "B",
+                "feedback": "Exatamente! As universidades são centros de inovação e formação, essenciais para desenvolver o conhecimento e os profissionais que irão enfrentar os desafios da gestão da água (ODS 4)."
+            },
+            {
+                "pergunta": "Qual tecnologia sustentável a Ecocities desenvolve para reduzir o consumo de água potável?",
+                "alternativas": [
+                    "A) Dessalinização de água oceânica",
+                    "B) Captação e reuso de águas pluviais",
+                    "C) Processos químicos para eliminação total de minerais na água",
+                    "D) Produção de água potável a partir de resíduos industriais"
+                ],
+                "resposta_correta": "B",
+                "feedback": "Correto! A Ecocities desenvolve sistemas de captação e reuso de águas pluviais, tornando comunidades mais resilientes às crises hídricas."
+            },
+            {
+                "pergunta": "Como a Reaqt contribui para a eficiência hídrica de empresas?",
+                "alternativas": [
+                    "A) Criando sistemas de gestão inteligente para o uso da água",
+                    "B) Eliminando qualquer necessidade de água na produção industrial",
+                    "C) Substituindo água por gases comprimidos em processos industriais",
+                    "D) Reduzindo a dependência da água por meio de processos de evaporação forçada"
+                ],
+                "resposta_correta": "A",
+                "feedback": "Isso mesmo! A Reaqt desenvolve soluções inovadoras para tratamento e reuso de água, otimizando os recursos hídricos nas empresas."
+            },
+            {
+                "pergunta": "Quais tecnologias avançadas a Ambiensys utiliza para purificação de água de reúso?",
+                "alternativas": [
+                    "A) Nanofiltração e osmose reversa",
+                    "B) Evaporação por alta pressão",
+                    "C) Filtragem magnética de partículas de poluentes",
+                    "D) Extração química de resíduos sólidos"
+                ],
+                "resposta_correta": "A",
+                "feedback": "Exatamente! A Ambiensys utiliza nanofiltração e osmose reversa para garantir água de reúso segura e sustentável."
+            },
+            {
+                "pergunta": "Qual benefício direto do reuso de água para empresas e comunidades?",
+                "alternativas": [
+                    "A) Redução dos custos operacionais e preservação de recursos naturais",
+                    "B) Aumento do desperdício de água em processos industriais",
+                    "C) Necessidade de infraestrutura mais cara para manutenção do sistema",
+                    "D) Crescimento do consumo desnecessário de água potável"
+                ],
+                "resposta_correta": "A",
+                "feedback": "Muito bem! O reuso de água reduz custos e contribui para a preservação ambiental, garantindo disponibilidade hídrica a longo prazo."
+            },
+            {
+                "pergunta": "Qual técnica pode ser usada para dessalinizar água oceânica de forma sustentável?",
+                "alternativas": [
+                    "A) Destilação térmica com alto consumo energético",
+                    "B) Osmose reversa, separando o sal da água por meio de membranas",
+                    "C) Transformação química da água salgada sem filtração",
+                    "D) Extração de sal por processo de combustão química"
+                ],
+                "resposta_correta": "B",
+                "feedback": "Boa! A osmose reversa é uma das técnicas mais sustentáveis para dessalinização, permitindo transformar água salgada em potável com eficiência energética."
+            },
+            {
+                "pergunta": "Qual o principal objetivo do planejamento e gestão de recursos naturais?",
+                "alternativas": [
+                    "A) Aumentar a exploração para o crescimento econômico.",
+                    "B) Criar estratégias para o uso sustentável de água, solo e biodiversidade.",
+                    "C) Ignorar os limites ambientais em prol do desenvolvimento.",
+                    "D) Focar apenas na preservação intocada da natureza."
+                ],
+                "resposta_correta": "B",
+                "feedback": "Correto! O objetivo é equilibrar desenvolvimento com sustentabilidade, promovendo o uso responsável dos recursos."
+            },
+            {
+                "pergunta": "Quais são os três principais recursos naturais que um gestor ambiental precisa considerar no planejamento sustentável?",
+                "alternativas": [
+                    "A) Minerais, petróleo e gás.",
+                    "B) Água, solo e biodiversidade.",
+                    "C) Florestas, ar e animais de estimação.",
+                    "D) Cidades, indústrias e agricultura."
+                ],
+                "resposta_correta": "B",
+                "feedback": "Boa! Água, solo e biodiversidade são pilares fundamentais do planejamento ambiental sustentável."
+            },
+            {
+                "pergunta": "Qual a principal função da fiscalização e conformidade ambiental?",
+                "alternativas": [
+                    "A) Ajudar empresas a lucrar mais, mesmo que prejudiquem o ambiente.",
+                    "B) Garantir que empresas e instituições sigam regulamentações ambientais rigorosas.",
+                    "C) Punir empresas sem oferecer alternativas sustentáveis.",
+                    "D) Ignorar pequenas infrações ambientais."
+                ],
+                "resposta_correta": "B",
+                "feedback": "Perfeito! A fiscalização garante o cumprimento das normas ambientais, promovendo responsabilidade ecológica."
+            },
+            {
+                "pergunta": "O que acontece com empresas que não seguem as regulamentações ambientais?",
+                "alternativas": [
+                    "A) Recebem um prêmio por inovação.",
+                    "B) São isentas de impostos.",
+                    "C) Podem sofrer sanções como multas e paralisação de atividades.",
+                    "D) São ignoradas pelos órgãos fiscalizadores."
+                ],
+                "resposta_correta": "C",
+                "feedback": "Correto! A não conformidade pode levar a sanções legais sérias."
+            }
+        ];
+
+        let quizQuestions = []; // Variável que armazenará as 10 questões selecionadas
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startQuiz() {
+            // Seleciona 10 questões aleatórias
+            quizQuestions = selectRandomQuestions(allQuizQuestions, 10);
+            
+            document.querySelector(".start-button").classList.add("hidden");
+            document.getElementById("quiz-container").classList.remove("hidden");
+            currentQuestionIndex = 0;
+            score = 0;
+            renderQuestion();
+        }
+
+        // Função para selecionar N questões aleatórias sem repetição
+        function selectRandomQuestions(allQuestions, count) {
+            // Cria uma cópia do array para não modificar o original
+            const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function renderQuestion() {
+            const container = document.getElementById("quiz-container");
+            const q = quizQuestions[currentQuestionIndex];
+            
+            container.innerHTML = `
+                <div class="score-display">Pontuação: ${score}/${quizQuestions.length}</div>
+                <div class="question-text">${q.pergunta}</div>
+                <div class="quiz-buttons">
+                    ${q.alternativas.map((alt, idx) => `
+                        <button class="button" onclick="checkAnswer('${alt.charAt(0)}')">
+                            ${alt}
+                        </button>
+                    `).join('')}
+                </div>
+                <div id="feedback" class="feedback hidden"></div>
+                <button class="button next-btn hidden" onclick="nextQuestion()">Próxima</button>
+            `;
+        }
+
+        function checkAnswer(letter) {
+            const q = quizQuestions[currentQuestionIndex];
+            const feedback = document.getElementById("feedback");
+            
+            if (letter === q.resposta_correta) {
+                feedback.className = "feedback correct";
+                feedback.textContent = "✅ Resposta correta! " + q.feedback;
+                score++;
+            } else {
+                feedback.className = "feedback incorrect";
+                const correctAnswer = q.alternativas.find(a => a.startsWith(q.resposta_correta));
+                feedback.textContent = `❌ Resposta incorreta! A correta é: ${correctAnswer}. ${q.feedback}`;
+            }
+            
+            // Desabilita todos os botões de resposta
+            document.querySelectorAll(".quiz-buttons .button").forEach(btn => {
+                btn.disabled = true;
+            });
+            
+            // Mostra o feedback e o botão "Próxima"
+            feedback.classList.remove("hidden");
+            document.querySelector(".next-btn").classList.remove("hidden");
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            const quizContainer = document.getElementById("quiz-container");
+            const resultsContainer = document.getElementById("results-container");
+
+            quizContainer.classList.add("hidden");
+            resultsContainer.classList.remove("hidden");
+
+            // Calcula a porcentagem de acertos
+            const percentage = Math.round((score / quizQuestions.length) * 100);
+            let message = "";
+            
+            if (percentage === 100) {
+                message = "Incrível! Você é um verdadeiro especialista em hidráulica e sustentabilidade!";
+            } else if (percentage >= 80) {
+                message = "Muito bem! Você tem um ótimo conhecimento sobre o tema!";
+            } else if (percentage >= 50) {
+                message = "Bom trabalho! Que tal estudar mais para melhorar ainda mais?";
+            } else {
+                message = "Não desista! Continue aprendendo e tentando!";
+            }
+
+            resultsContainer.innerHTML = `
+                <h2>Quiz Concluído!</h2>
+                <p>Sua pontuação final: ${score} de ${quizQuestions.length}</p>
+                <p>${message}</p>
+                <button class="restart-button" onclick="restartQuiz()">Jogar Novamente</button>
+            `;
+        }
+
+       function restartQuiz() {
+        document.getElementById("results-container").classList.add("hidden");
+        // Em vez de apenas mostrar o botão "Começar Quiz", vamos chamar startQuiz() diretamente
+        startQuiz();
+        }
+
+        // Inicia o quiz quando a página carrega
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("quiz-container").classList.add("hidden");
+            document.getElementById("results-container").classList.add("hidden");
+        });
+    </script>
+</body>
+</html>
